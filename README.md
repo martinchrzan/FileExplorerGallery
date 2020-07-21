@@ -3,6 +3,8 @@
 
 *FileExplorerGallery* will let you quickly view all images in the currently opened folder. 
 
+Based on the image gallery in [Atlasee](https://store.steampowered.com/app/1052330/Atlasee/)
+
 # [**Download the latest release here**](https://github.com/martinchrzan/FileExplorerGallery/releases/latest)
 
 ## **Open**
