@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>FileExplorerGallery</id>
+    <version>1.0.0</version>
+    <authors>Martin Chrzan</authors>
+    <owners>Martin Chrzan</owners>
+    <licenseUrl>https://github.com/martinchrzan/FileExplorerGallery/blob/master/LICENSE</licenseUrl>
+    <projectUrl>http://github.com/martinchrzan/FileExplorerGallery</projectUrl>
+    <!--<iconUrl></iconUrl>-->
+    <releaseNotes>
+      Initial release
+    </releaseNotes>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FileExplorerGallery</description>
+    <copyright>Martin Chrzan Copyright 2020</copyright>
+    <tags>file explorer gallery</tags>
+  </metadata>
+  <files>
+    <file src="FileExplorerGallery\bin\Release\**" target="lib\net45\" exclude="**\*.pdb;**\*.vshost.*"/>
+  </files>
+</package>
