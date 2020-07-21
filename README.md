@@ -3,6 +3,8 @@
 
 *FileExplorerGallery* will let you quickly view all images in the currently opened folder. 
 
+[**Download the latest release here**](https://github.com/martinchrzan/FileExplorerGallery/releases/latest)
+
 ## **Open**
 Simply press F12 (default shortcut, can be changed) to open it up, when you are in the desired folder
 
