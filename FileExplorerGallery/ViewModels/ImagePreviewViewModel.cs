@@ -264,6 +264,11 @@ namespace FileExplorerGallery.ViewModels
                 else
                 {
                     SelectedImage = Images.FirstOrDefault(it => Path.Equals(it.Path, selectedImage));
+                    // something else then image was selected
+                    if(SelectedImage == null)
+                    {
+                        SelectedImage = Images.First();
+                    }
                 }
                 SetNavigationButtonsVisibility();
                 _selectedImageInList = SelectedImage;
