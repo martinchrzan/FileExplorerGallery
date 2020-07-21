@@ -263,7 +263,7 @@ namespace FileExplorerGallery.ViewModels
                 }
                 else
                 {
-                    SelectedImage = Images.First(it => Path.Equals(it.Path, selectedImage));
+                    SelectedImage = Images.FirstOrDefault(it => Path.Equals(it.Path, selectedImage));
                 }
                 SetNavigationButtonsVisibility();
                 _selectedImageInList = SelectedImage;
