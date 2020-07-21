@@ -15,7 +15,6 @@ namespace FileExplorerGallery
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            Application.Current.MainWindow = Application.Current.Windows[0];
         }
     }
 }
