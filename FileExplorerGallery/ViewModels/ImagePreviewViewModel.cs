@@ -1,13 +1,18 @@
-﻿using FileExplorerGallery.Common;
+﻿using FileExplorerGallery.Behaviors;
+using FileExplorerGallery.Common;
 using FileExplorerGallery.Helpers;
 using FileExplorerGallery.Settings;
 using FileExplorerGallery.ViewModelContracts;
 using FileExplorerGallery.VIewModelFactories;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -27,6 +32,9 @@ namespace FileExplorerGallery.ViewModels
         private readonly IThrottledActionInvokerFactory _throttledActionInvokerFactory;
         private readonly IImagePreviewItemViewModelFactory _imagePreviewItemViewModelFactory;
         private readonly IUserSettings _userSettings;
+        private readonly DialogHelper _dialogHelper;
+        private readonly ApplicationDispatcher _applicationDispatcher;
+        private readonly ImageHelper _imageHelper;
         private IImagePreviewItemViewModel _selectedImageInList;
         private IImagePreviewItemViewModel _selectedImage;
         private bool _nullSet;
@@ -35,16 +43,24 @@ namespace FileExplorerGallery.ViewModels
         private bool _noImagesMessageVisible = false;
         private bool _previousImageButtonVisible;
         private bool _nextImageButtonVisible;
+        private int _rotation;
+        private bool _saveVisible;
+        private bool _savingImageMessageVisible;
 
         [ImportingConstructor]
         public ImagePreviewViewModel(IThrottledActionInvokerFactory throttledActionInvokerFactory,
             IImagePreviewItemViewModelFactory imagePreviewItemViewModelFactory,
-            IUserSettings userSettings)
+            IUserSettings userSettings,
+            DialogHelper dialogHelper,
+            ApplicationDispatcher applicationDispatcher,
+            ImageHelper imageHelper)
         {
             _throttledActionInvokerFactory = throttledActionInvokerFactory;
             _imagePreviewItemViewModelFactory = imagePreviewItemViewModelFactory;
             _userSettings = userSettings;
-
+            _dialogHelper = dialogHelper;
+            _applicationDispatcher = applicationDispatcher;
+            _imageHelper = imageHelper;
             CloseCommand = new RelayCommand(() =>
             {
                 Application.Current.MainWindow.Close();
@@ -73,11 +89,16 @@ namespace FileExplorerGallery.ViewModels
                 PreviousImageButtonVisible = SelectedImage != Images.First();
                 NextImageButtonVisible = SelectedImage != Images.Last();
             });
+
+            DeleteImageCommand = new RelayCommand(() => DeleteSelectedImage());
+
+            SaveCommand = new RelayCommand(() => SaveSelectedImage());
         }
 
         public void Initialize(string directoryPath, string selectedItem)
         {
             NoImagesMessageVisible = false;
+            SaveVisible = false;
 
             _selectedImageThrottledActionInvoker = _throttledActionInvokerFactory.CreateThrottledActionInvoker();
             _selectedImageLowResThrottledActionInvoker = _throttledActionInvokerFactory.CreateThrottledActionInvoker();
@@ -85,7 +106,7 @@ namespace FileExplorerGallery.ViewModels
             _slideshowDelayInSeconds = _userSettings.SlideshowDuration.Value;
 
             LoadImageFiles(directoryPath, selectedItem);
-            if(Images.Count == 0)
+            if (Images.Count == 0)
             {
                 NoImagesMessageVisible = true;
             }
@@ -118,18 +139,21 @@ namespace FileExplorerGallery.ViewModels
                     OnPropertyChanged(nameof(SelectedImageLowRes));
                     _nullSet = true;
                 }
-                _selectedImageThrottledActionInvoker.ScheduleAction(() => {
+
+                _selectedImageThrottledActionInvoker.ScheduleAction(() =>
+                {
                     SelectedImage = _selectedImageInList;
                     SelectedImageLowRes = null;
                     OnPropertyChanged(nameof(SelectedImageLowRes));
-                    SetNavigationButtonsVisibility();
-                }, 200);
+                }, 150);
 
                 _selectedImageLowResThrottledActionInvoker.ScheduleAction(() =>
                 {
                     SelectedImageLowRes = _selectedImageInList;
                     OnPropertyChanged(nameof(SelectedImageLowRes));
                     _nullSet = false;
+                    SetNavigationButtonsVisibility();
+
                 }, 50);
 
                 SetSelectedImage(value);
@@ -158,6 +182,44 @@ namespace FileExplorerGallery.ViewModels
         public ICommand PreviousImageCommand { get; }
 
         public ICommand NextImageCommand { get; }
+
+        public ICommand DeleteImageCommand { get; }
+
+        public ICommand SaveCommand { get; }
+
+        public int Rotation
+        {
+            get
+            {
+                return _rotation;
+            }
+            set
+            {
+                _rotation = value;
+                if (Rotation % 360 != 0)
+                {
+                    SaveVisible = true;
+                }
+                else
+                {
+                    SaveVisible = false;
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SaveVisible
+        {
+            get
+            {
+                return _saveVisible;
+            }
+            set
+            {
+                _saveVisible = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool NoImagesMessageVisible
         {
@@ -198,6 +260,102 @@ namespace FileExplorerGallery.ViewModels
             }
         }
 
+        public bool SavingImageMessageVisible
+        {
+            get
+            {
+                return _savingImageMessageVisible;
+            }
+            set
+            {
+                _savingImageMessageVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void DeleteSelectedImage()
+        {
+            if (!_userSettings.ShowDeleteConfirmation.Value || (_userSettings.ShowDeleteConfirmation.Value && _dialogHelper.ShowDialog("Do you want to delete?", Path.GetFileName(SelectedImage.Path))))
+            {
+                var selectedImage = SelectedImage;
+                if (Images.Count > 1)
+                {
+                    if (selectedImage == Images.Last())
+                    {
+                        SelectedImage = Images.Skip(Images.Count - 2).First();
+                    }
+                    else
+                    {
+                        SelectedImage = Images.SkipWhile(it => it != SelectedImage).Skip(1).First();
+                    }
+
+                    _selectedImageInList = SelectedImage;
+                    OnPropertyChanged(nameof(SelectedImageInList));
+                }
+
+                if (DeleteImage(selectedImage.Path))
+                {
+                    Images.Remove(selectedImage);
+                }
+                else
+                {
+                    // revert selection
+                    SelectedImage = selectedImage;
+                    _selectedImageInList = SelectedImage;
+                    OnPropertyChanged(nameof(SelectedImageInList));
+                }
+            }
+        }
+
+        private async void SaveSelectedImage()
+        {
+            if (SaveVisible)
+            {
+                SavingImageMessageVisible = true;
+
+                if (await _imageHelper.SaveRotatedImage(SelectedImage.Path, Rotation))
+                {
+                    SaveVisible = false;
+                }
+
+                GalleryCacheProvider.ResetThumbnail(SelectedImage.Path);
+                SelectedImage.Refresh();
+                SavingImageMessageVisible = false;
+            }
+        }
+
+        private bool DeleteImage(string imagePath)
+        {
+            if (_userSettings.BackupDeletedImages.Value)
+            {
+                var backupFolder = Path.Combine(Path.GetDirectoryName(imagePath), "Backup");
+            
+                try
+                {
+                    Directory.CreateDirectory(backupFolder);
+                    File.Move(imagePath, Path.Combine(backupFolder, Path.GetFileName(imagePath)));
+                }
+                catch(Exception ex)
+                {
+                    Logger.LogError("Failed to move image " + imagePath + " into " + backupFolder, ex);
+                    return false;
+                }
+            }
+            else
+            {
+                try
+                {
+                    File.Delete(imagePath);
+                }
+                catch(Exception ex)
+                {
+                    Logger.LogError("Failed to delete image " + imagePath, ex);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private void SetSelectedImage(IImagePreviewItemViewModel image)
         {
             if (_inSlideshowMode)
@@ -221,22 +379,6 @@ namespace FileExplorerGallery.ViewModels
                     }, _slideshowDelayInSeconds * MsPerSecond);
                 }
             }
-        }
-
-        public BitmapSource Convert(System.Drawing.Bitmap bitmap)
-        {
-            var bitmapData = bitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
-
-            var bitmapSource = BitmapSource.Create(
-                bitmapData.Width, bitmapData.Height,
-                bitmap.HorizontalResolution, bitmap.VerticalResolution,
-                PixelFormats.Pbgra32, null,
-                bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
-
-            bitmap.UnlockBits(bitmapData);
-            return bitmapSource;
         }
 
         private void LoadImageFiles(string directoryPath, string selectedImage)
@@ -282,8 +424,18 @@ namespace FileExplorerGallery.ViewModels
 
         private void SetNavigationButtonsVisibility()
         {
-            NextImageButtonVisible = SelectedImage != Images.Last();
-            PreviousImageButtonVisible = SelectedImage != Images.First();
+            if (Images.Count > 0)
+            {
+                NextImageButtonVisible = SelectedImageLowRes != Images.Last();
+                PreviousImageButtonVisible = SelectedImageLowRes != Images.First();
+            }
+            else
+            {
+                NextImageButtonVisible = false;
+                PreviousImageButtonVisible = false;
+                NoImagesMessageVisible = true;
+                SaveVisible = false;
+            }
         }
     }
 }

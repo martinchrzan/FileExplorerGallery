@@ -84,6 +84,12 @@ namespace FileExplorerGallery.Behaviors
             return _scrollViewer;
         }
 
+        public static void ResetThumbnail(string pathToImage)
+        {
+            _thumbnails.Remove(pathToImage);
+            GetThumbnailImageWidth(pathToImage);
+        }
+
         public static void ClearCache()
         {
             _thumbnails.Clear();

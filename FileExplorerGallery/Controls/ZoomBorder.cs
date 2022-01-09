@@ -1,4 +1,5 @@
-﻿using FileExplorerGallery.ViewModelContracts;
+﻿using FileExplorerGallery.Helpers;
+using FileExplorerGallery.ViewModelContracts;
 using System;
 using System.Linq;
 using System.Windows;
@@ -39,6 +40,15 @@ namespace FileExplorerGallery.Controls
 
         public static readonly DependencyProperty PreviewItemProperty = DependencyProperty.Register(
             "PreviewItemViewModel", typeof(IImagePreviewItemViewModel), typeof(ZoomBorder), new PropertyMetadata(PropertyChangedCallback));
+
+
+        public int Rotation
+        {
+            get { return (int)GetValue(RotationProperty); }
+            set { SetValue(RotationProperty, value); } 
+        }
+
+        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomBorder));
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -121,14 +131,9 @@ namespace FileExplorerGallery.Controls
             if (_child != null)
             {
                 var rt = GetRotateTransform(_child);
-                if (rt.Angle == -360)
-                {
-                    rt.Angle = 0;
-                }
-
-                var to = rt.Angle;
+                var to = Math.Round(rt.Angle);
                 to -= 90;
-
+                Rotation = (int)to;
                 AnimateRotateTransform(rt, to, 400);
             }
         }

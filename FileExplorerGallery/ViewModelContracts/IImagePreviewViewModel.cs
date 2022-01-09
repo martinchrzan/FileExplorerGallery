@@ -18,9 +18,19 @@ namespace FileExplorerGallery.ViewModelContracts
 
         ICommand NextImageCommand { get; }
 
+        ICommand DeleteImageCommand { get; }
+
+        ICommand SaveCommand { get; }
+
+        bool SaveVisible { get; }
+
+        bool SavingImageMessageVisible { get; }
+
         bool PreviousImageButtonVisible { get; }
 
         bool NextImageButtonVisible { get; }
+
+        int Rotation { get; set; }
 
         ObservableCollection<IImagePreviewItemViewModel> Images { get; }
 

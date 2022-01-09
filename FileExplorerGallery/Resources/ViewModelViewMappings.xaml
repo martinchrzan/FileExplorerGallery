@@ -10,4 +10,8 @@
     <DataTemplate DataType="{x:Type viewModels:ImagePreviewViewModel}">
         <views:ImagePreviewView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModels:DialogViewModel}">
+        <views:DialogView/>
+    </DataTemplate>
 </ResourceDictionary>

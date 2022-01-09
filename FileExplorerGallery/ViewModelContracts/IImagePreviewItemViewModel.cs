@@ -7,5 +7,9 @@ namespace FileExplorerGallery.ViewModelContracts
         string Path { get; }
 
         ICommand SelectCommand { get; }
+
+        bool NeedRefresh { get; set; }
+
+        void Refresh();
     }
 }

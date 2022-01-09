@@ -144,6 +144,32 @@ namespace FileExplorerGallery.ViewModels
             }
         }
 
+        public bool ShowDeleteConfirmation
+        {
+            get
+            {
+                return _userSettings.ShowDeleteConfirmation.Value;
+            }
+            set
+            {
+                _userSettings.ShowDeleteConfirmation.Value = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool BackupDeletedImages
+        {
+            get
+            {
+                return _userSettings.BackupDeletedImages.Value;
+            }
+            set
+            {
+                _userSettings.BackupDeletedImages.Value = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ApplicationVersion { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
 
         public ICommand ChangeShortcutCommand { get; }

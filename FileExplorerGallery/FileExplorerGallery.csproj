@@ -65,6 +65,9 @@
     </Page>
     <Compile Include="Animations\BrushAnimation.cs" />
     <Compile Include="Animations\GridLengthAnimation.cs" />
+    <Compile Include="Behaviors\BehaviorExtensions.cs" />
+    <Compile Include="Behaviors\CloseWindowOnEsc.cs" />
+    <Compile Include="Behaviors\FocusFirstButtonBehavior.cs" />
     <Compile Include="Behaviors\GalleryCacheBehavior.cs" />
     <Compile Include="Behaviors\GalleryCacheProvider.cs" />
     <Compile Include="Behaviors\GalleryKeyBindingBehavior.cs" />
@@ -82,12 +85,18 @@
     <Compile Include="Converters\PathToThumbnailConverter.cs" />
     <Compile Include="Converters\PathToThumbnailWidthConverter.cs" />
     <Compile Include="Converters\ToLowResImageConverter.cs" />
+    <Compile Include="Converters\UriToCachedImageConverter.cs" />
+    <Compile Include="DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\SortingExtensions.cs" />
     <Compile Include="Extensions\WpfHelpers.cs" />
     <Compile Include="Helpers\ApplicationDispatcher.cs" />
     <Compile Include="Helpers\AppStateHandler.cs" />
     <Compile Include="Helpers\AppUpdateManager.cs" />
+    <Compile Include="Helpers\DialogHelper.cs" />
     <Compile Include="Helpers\FileExplorerSortingProvider.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\IThrottledActionInvoker.cs" />
     <Compile Include="Helpers\IThrottledActionInvokerFactory.cs" />
     <Compile Include="Helpers\MonitorResolutionHelper.cs" />
@@ -102,14 +111,19 @@
     <Compile Include="Settings\IUserSettings.cs" />
     <Compile Include="Settings\SettingItem.cs" />
     <Compile Include="Settings\UserSettings.cs" />
+    <Compile Include="ViewModelContracts\IDialogViewModel.cs" />
     <Compile Include="ViewModelContracts\IImagePreviewItemViewModel.cs" />
     <Compile Include="ViewModelContracts\IImagePreviewViewModel.cs" />
     <Compile Include="ViewModelContracts\ISettingsViewModel.cs" />
     <Compile Include="VIewModelFactories\IImagePreviewItemViewModelFactory.cs" />
     <Compile Include="VIewModelFactories\ImagePreviewItemViewModelFactory.cs" />
+    <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\ImagePreviewItemViewModel.cs" />
     <Compile Include="ViewModels\ImagePreviewViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImagePreviewView.xaml.cs">
       <DependentUpon>ImagePreviewView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +133,10 @@
     <Compile Include="WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="DialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

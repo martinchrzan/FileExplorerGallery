@@ -10,6 +10,10 @@ namespace FileExplorerGallery.ViewModelContracts
 
         bool ShowingKeyboardCaptureOverlay { get; set; }
 
+        bool ShowDeleteConfirmation { get; set; }
+
+        bool BackupDeletedImages { get; set; }
+
         int SlideshowDuration { get; set; }
 
         string ShortCut { get; }

@@ -5,6 +5,7 @@
                     xmlns:converters="clr-namespace:FileExplorerGallery.Converters">
     <!-- CONVERTERS -->
     <converters:ToLowResImageConverter x:Key="toLowResImageConverter"/>
+    <converters:UriToCachedImageConverter x:Key="uriToCachedImageConverter"/>
     <converters:PathToFileNameOnlyConverter x:Key="pathToFileNameOnlyConverter"/>
     <converters:PathToThumbnailConverter x:Key="pathToThumbnailConverter"/>
     <converters:PathToThumbnailWidthConverter x:Key="pathToThumbnailWidthConverter"/>
@@ -443,6 +444,34 @@
         </Style.Triggers>
     </Style>
 
+
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="#DDDDDD"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True" x:Name="contentGrid" RenderTransformOrigin="0.5 0.5">
+                        <Grid.RenderTransform>
+                            <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                        </Grid.RenderTransform>
+
+                        <Border CornerRadius="4" BorderThickness="1" BorderBrush="Transparent" Background="#606060" x:Name="backgroundBorder">
+                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="BorderBrush" TargetName="backgroundBorder" Value="#AAAAAA"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="backgroundBorder" Value="#909090"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     
     <!-- EMPTY CONTROLS STYLES -->
     <Style x:Key="EmptyButtonStyle" TargetType="{x:Type Button}">

@@ -108,16 +108,12 @@ namespace FileExplorerGallery.Helpers
 
         private static IOrderedEnumerable<FileInfo> OrderByDate(FileInfo[] files, bool isDescending)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             var filesWithCorrectDate = new Dictionary<FileInfo, DateTime>();
             foreach(var file in files)
             {
                 filesWithCorrectDate[file] = GetRealCreationTime(file);
             }
 
-            sw.Stop();
-            var el = sw.ElapsedMilliseconds;
             if (isDescending)
             {
                 filesWithCorrectDate.OrderByDescending(it => it.Value).Select(it => it.Key).OrderBy(a => 1);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
 
@@ -15,10 +16,10 @@ namespace FileExplorerGallery.Helpers
             _timer = new Timer(Callback, null, Timeout.Infinite, Timeout.Infinite);
         }
 
-        public void ScheduleAction(Action action, int miliseconds)
+        public void ScheduleAction(Action action, int milliseconds)
         {
             _actionToRun = action;
-            _timer.Change(miliseconds, Timeout.Infinite);
+            _timer.Change(milliseconds, Timeout.Infinite);
         }
 
         public void Dispose()

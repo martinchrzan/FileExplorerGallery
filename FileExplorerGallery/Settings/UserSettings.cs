@@ -14,6 +14,8 @@ namespace FileExplorerGallery.Settings
             AutomaticUpdates = new SettingItem<bool>(settings.AutomaticUpdates, (currentValue) => { settings.AutomaticUpdates = currentValue; SaveSettings(); });
             ActivationShortcut = new SettingItem<string>(settings.ActivationShortcut, (currentValue) => { settings.ActivationShortcut = currentValue; SaveSettings(); });
             SlideshowDuration = new SettingItem<int>(settings.SlideshowDuration, (currentValue) => { settings.SlideshowDuration = currentValue; SaveSettings(); });
+            ShowDeleteConfirmation = new SettingItem<bool>(settings.ShowDeleteConfirmation, (currentValue) => { settings.ShowDeleteConfirmation = currentValue; SaveSettings(); });
+            BackupDeletedImages = new SettingItem<bool>(settings.BackupDeletedImages, (currentValue) => { settings.BackupDeletedImages = currentValue; SaveSettings(); });
         }
 
         public SettingItem<bool> RunOnStartup { get; }
@@ -23,6 +25,10 @@ namespace FileExplorerGallery.Settings
         public SettingItem<bool> AutomaticUpdates { get; }
 
         public SettingItem<int> SlideshowDuration { get; }
+
+        public SettingItem<bool> ShowDeleteConfirmation { get; }
+
+        public SettingItem<bool> BackupDeletedImages { get; }
 
         private void SaveSettings()
         {

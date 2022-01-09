@@ -3,7 +3,7 @@ using System.Windows.Interactivity;
 
 namespace FileExplorerGallery.Behaviors
 {
-    public class GalleryKeyBindingBehavior : Behavior<Window>
+    public class CloseWindowOnEsc : Behavior<Window>
     {
         protected override void OnAttached()
         {
@@ -13,14 +13,16 @@ namespace FileExplorerGallery.Behaviors
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
-            AssociatedObject.PreviewKeyDown += AssociatedObject_PreviewKeyDown;
+            AssociatedObject.KeyDown += AssociatedObject_KeyDown;
         }
 
-        private void AssociatedObject_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void AssociatedObject_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
-                Application.Current.MainWindow.Close();
+                AssociatedObject.Loaded -= AssociatedObject_Loaded;
+                AssociatedObject.KeyDown -= AssociatedObject_KeyDown;
+                AssociatedObject.Close();
             }
         }
     }

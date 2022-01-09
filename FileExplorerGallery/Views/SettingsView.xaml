@@ -27,6 +27,8 @@
     <Grid>
         <StackPanel Margin="10">
             <CheckBox Margin="5" IsChecked="{Binding RunOnStartup}" Content="Run on startup"/>
+            <CheckBox Margin="5" IsChecked="{Binding ShowDeleteConfirmation}" Content="Show confirmation on delete"/>
+            <CheckBox Margin="5" IsChecked="{Binding BackupDeletedImages}" Content="Backup deleted images ('Backup' folder)" />
             <CheckBox Margin="5" IsChecked="{Binding AutomaticUpdates}" Content="Automatic updates"/>
             <WrapPanel>
                 <TextBlock Margin="5" Text="Slideshow mode - Change picture after"/>
@@ -50,7 +52,7 @@
                         Project website
                     </Hyperlink>
             </TextBlock>
-            <TextBlock HorizontalAlignment="Right" Text="Martin Chrzan © 2020" FontWeight="Light"/>
+            <TextBlock HorizontalAlignment="Right" Text="Martin Chrzan © 2022" FontWeight="Light"/>
         </StackPanel>
 
         <Border Background="Black" Visibility="{Binding ShowingKeyboardCaptureOverlay, Converter={StaticResource boolToVisibilityConverter}}">

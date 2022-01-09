@@ -9,5 +9,9 @@
         SettingItem<bool> AutomaticUpdates { get; }
 
         SettingItem<int> SlideshowDuration { get; }
+
+        SettingItem<bool> ShowDeleteConfirmation { get; }
+
+        SettingItem<bool> BackupDeletedImages { get; }
     }
 }

@@ -36,6 +36,24 @@ namespace FileExplorerGallery.Behaviors
         public static readonly DependencyProperty SlideshowButtonProperty = DependencyProperty.Register(
             "SlideshowButton", typeof(Button), typeof(GallerySlideshowBehavior));
 
+        public Button DeleteButton
+        {
+            get { return (Button)GetValue(DeleteButtonProperty); }
+            set { SetValue(DeleteButtonProperty, value); }
+        }
+
+        public static readonly DependencyProperty DeleteButtonProperty = DependencyProperty.Register(
+            "DeleteButton", typeof(Button), typeof(GallerySlideshowBehavior));
+
+        public Button SaveButton
+        {
+            get { return (Button)GetValue(SaveButtonProperty); }
+            set { SetValue(SaveButtonProperty, value); }
+        }
+
+        public static readonly DependencyProperty SaveButtonProperty = DependencyProperty.Register(
+            "SaveButton", typeof(Button), typeof(GallerySlideshowBehavior));
+
         protected override void OnAttached()
         {
             AssociatedObject.Loaded += AssociatedObject_Loaded;
@@ -68,6 +86,8 @@ namespace FileExplorerGallery.Behaviors
                 MainGrid.BeginAnimation(Grid.BackgroundProperty, brushAnimation);
 
                 RotateButton.Visibility = Visibility.Collapsed;
+                SaveButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
                 SlideshowButton.Visibility = Visibility.Collapsed;
             };
         }

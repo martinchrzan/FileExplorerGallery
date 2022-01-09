@@ -2,18 +2,20 @@
 <package>
   <metadata>
     <id>FileExplorerGallery</id>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <authors>Martin Chrzan</authors>
     <owners>Martin Chrzan</owners>
     <licenseUrl>https://github.com/martinchrzan/FileExplorerGallery/blob/master/LICENSE</licenseUrl>
     <projectUrl>http://github.com/martinchrzan/FileExplorerGallery</projectUrl>
     <!--<iconUrl></iconUrl>-->
     <releaseNotes>
-      Updated signing certificate
+      Added delete functionality
+	  Added backup on delete functionality
+	  Added save rotated image functionality
     </releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>FileExplorerGallery</description>
-    <copyright>Martin Chrzan Copyright 2020-2021</copyright>
+    <copyright>Martin Chrzan Copyright 2020-2022</copyright>
     <tags>file explorer gallery</tags>
   </metadata>
   <files>

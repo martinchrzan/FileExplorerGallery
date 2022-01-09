@@ -16,10 +16,10 @@ namespace FileExplorerGallery.Converters
 
             var fullPath = new Uri((string)value, UriKind.Absolute);
 
-            BitmapImage smallerBitmapImage = new BitmapImage();
+            var smallerBitmapImage = new BitmapImage();
             smallerBitmapImage.BeginInit();
             smallerBitmapImage.DecodePixelWidth = 300;
-            smallerBitmapImage.CacheOption = BitmapCacheOption.None;
+            smallerBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             smallerBitmapImage.UriSource = fullPath;
             smallerBitmapImage.EndInit();
 

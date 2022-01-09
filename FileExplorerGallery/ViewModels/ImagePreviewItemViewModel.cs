@@ -1,13 +1,14 @@
 ﻿using FileExplorerGallery.Common;
 using FileExplorerGallery.ViewModelContracts;
 using System;
-using System.ComponentModel.Composition;
 using System.Windows.Input;
 
 namespace FileExplorerGallery.ViewModels
 {
-    public class ImagePreviewItemViewModel : IImagePreviewItemViewModel
+    public class ImagePreviewItemViewModel : ViewModelBase, IImagePreviewItemViewModel
     {
+        private string _path;
+
         public ImagePreviewItemViewModel(string imagePath, Action<IImagePreviewItemViewModel> selectCommandAction)
         {
             SelectCommand = new RelayCommand((obj) =>
@@ -17,8 +18,27 @@ namespace FileExplorerGallery.ViewModels
             Path = imagePath;
         }
 
-        public string Path { get; }
+        public string Path
+        {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                _path = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool NeedRefresh { get; set; }
 
         public ICommand SelectCommand { get; }
+
+        public void Refresh()
+        {
+            NeedRefresh = true;
+            OnPropertyChanged("Path");
+        }
     }
 }
